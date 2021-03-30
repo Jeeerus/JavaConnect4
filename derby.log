@@ -1,0 +1,15 @@
+----------------------------------------------------------------
+Mon Jun 04 19:00:32 NZST 2018:
+Booting Derby version The Apache Software----------------------------------------------------------------
+Mon Jun 04 19:00:43 NZST 2018: Shutting down Derby engine
+----------------------------------------------------------------
+ loader sun.misc.Launcher$AppClassLoader@33909752 
+Loaded from file:/C:/Users/andyb/Documents/NetBeansProjects/zzz/libraries/derby.jar
+java.vendor=Oracle Corporation
+java.runtime.version=1.8.0_161-b12
+user.dir=C:\Users\andyb\Documents\NetBeansProjects\zzz
+os.name=Windows 10
+os.arch=amd64
+os.version=10.0
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''
