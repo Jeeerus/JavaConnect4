@@ -1,13 +1,11 @@
 ----------------------------------------------------------------
-Mon Jun 04 19:00:32 NZST 2018:
-Booting Derby version The Apache Software----------------------------------------------------------------
-Mon Jun 04 19:00:43 NZST 2018: Shutting down Derby engine
-----------------------------------------------------------------
- loader sun.misc.Launcher$AppClassLoader@33909752 
-Loaded from file:/C:/Users/andyb/Documents/NetBeansProjects/zzz/libraries/derby.jar
+Wed Jun 27 18:29:33 NZST 2018:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.14.2.0 - (1828579): instance a816c00e-0164-3fee-d1c5-0000071e3da8 
+on database directory C:\Users\GGPC\Documents\NetBeansProjects\P53 - 16948980 + 16945277\ConnectFourDB with class loader sun.misc.Launcher$AppClassLoader@33909752 
+Loaded from file:/C:/Users/GGPC/Documents/NetBeansProjects/P53%20-%2016948980%20+%2016945277/libraries/derby.jar
 java.vendor=Oracle Corporation
 java.runtime.version=1.8.0_161-b12
-user.dir=C:\Users\andyb\Documents\NetBeansProjects\zzz
+user.dir=C:\Users\GGPC\Documents\NetBeansProjects\P53 - 16948980 + 16945277
 os.name=Windows 10
 os.arch=amd64
 os.version=10.0

@@ -1,28 +1,25 @@
 package StartGame;
 
-import MainMenu.OptionsPanel;
 import Model.Chip;
 import Model.Grid;
 import Model.Player;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JOptionPane;
+import javax.swing.UIManager;
 import javax.swing.border.LineBorder;
 
 /**
+ * Controller Class for the Game. Contains all the event handling that changes
+ * and displays specific panels depending on the situation.
  *
- * @author Jairus
+ * @author Jairus M. & Andrew B.
  */
-public class ConnectFourController implements ActionListener {
+public class ConnectFourController {
 
     private ConnectFourModel model;
     private ConnectFourView view;
@@ -35,188 +32,248 @@ public class ConnectFourController implements ActionListener {
 
         db = new ConnectFourDatabase();
         db.createColourTable();
-        view = new ConnectFourView();
+        db.createGameTable();
 
-        tempColour = new Color[2];
         chipColourP1 = db.loadSavedColour(1);
         chipColourP2 = db.loadSavedColour(2);
+        tempColour = new Color[]{chipColourP1, chipColourP2};
+
+        view = new ConnectFourView();
         model = new ConnectFourModel(new Chip(chipColourP1), new Chip(chipColourP2));
 
-        // DROP BUTTONS ACTION LISTENER
+        // -------------------- DROP BUTTONS ACTION LISTENER -------------------- \\
         System.out.println("Controller Created");
         for (int i = 0; i < 7; i++) {
-            view.getDropPanel().getDropButton()[i].addActionListener(this);
+            view.getDropPanel().getDropButton()[i].addActionListener((ActionEvent e) -> {
+                for (int i1 = 0; i1 < 7; i1++) {
+                    if (e.getSource() == view.getDropPanel().getDropButton()[i1]) {
+                        dropChiptoGrid(e, i1);
+                    }
+                }
+            });
         }
 
-        // BUTTON MENU ACTION LISTENER
-        view.getBottomMenu().getNewGameButton().addActionListener(this);
-        view.getBottomMenu().getExitButton().addActionListener(this);
-        view.getBottomMenu().getSaveButton().addActionListener(this);
-
-        // MAIN MENU ACTION LISTENER
-        view.getMainMenu().getNewGame().addActionListener(this);
-        view.getMainMenu().getContinueGame().addActionListener(this);
-        view.getMainMenu().getExitGame().addActionListener(this);
-
-        //INSTRUCTIONS MENU
-        view.getMainMenu().getInstructions().addActionListener(this);
-        view.getInstructions().getBackButton().addActionListener(this);
-
-        //OPTIONS MENU
-        view.getMainMenu().getOptions().addActionListener(this);
-        view.getOptionsPanel().getBackButton().addActionListener(this);
-        view.getOptionsPanel().getSaveColoursButton().addActionListener(this);
-        view.getOptionsPanel().getBackButton().addActionListener(this);
-        for (int i = 0; i < 6; i++) {
-            view.getOptionsPanel().getP1ColourButtons()[i].addActionListener(this);
-            view.getOptionsPanel().getP2ColourButtons()[i].addActionListener(this);
-        }
-
-    }
-
-    /**
-     * Event Handling
-     */
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        // Drop Buttons
-        for (int i = 0; i < 7; i++) {
-            if (e.getSource() == view.getDropPanel().getDropButton()[i]) {
-                dropChiptoGrid(e, i);
-            }
-        }
-
-        // BOTTOM MENU BUTTONS 
+        // -------------------- Buttom MENU ACTION LISTENER -------------------- \\
         // New Game Button
-        if (e.getSource() == view.getBottomMenu().getNewGameButton()) {
+        view.getBottomMenu().getNewGameButton().addActionListener((ActionEvent e) -> {
             System.out.println("New Game Started");
             resetGame();
-        }
-        if (e.getSource() == view.getBottomMenu().getExitButton()) {
+        });
+
+        // Exit Button
+        view.getBottomMenu().getExitButton().addActionListener((ActionEvent e) -> {
+            System.out.println("Exiting to Main Menu...");
             exitToMenu();
-        }
+        });
 
-        if (e.getSource() == view.getBottomMenu().getSaveButton()) {
-            System.out.println("Saving current game");
+        // Save Button
+        view.getBottomMenu().getSaveButton().addActionListener((ActionEvent e) -> {
+            System.out.println("Saving game...");
             saveGame();
-        }
+        });
 
-        // MAIN MENU BUTTONS
-        if (e.getSource() == view.getMainMenu().getNewGame()) {
+        // -------------------- MAIN MENU ACTION LISTENER -------------------- \\
+        // New Game Button
+        view.getMainMenu().getNewGame().addActionListener((ActionEvent e) -> {
             System.out.println("New Game Started");
             startNewGame();
-        }
-        if (e.getSource() == view.getMainMenu().getContinueGame()) {
-            System.out.println("Continuing game...");
-            loadGameData();
-        }
-        if (e.getSource() == view.getMainMenu().getInstructions()) {
-            displayInstructions();
-        }
-        if (e.getSource() == view.getMainMenu().getExitGame()) {
+        });
+
+        // Continue Game Button
+        view.getMainMenu().getContinueGame().addActionListener((ActionEvent e) -> {
+            System.out.println("Continuing Game...");
+            continueGame();
+        });
+
+        // Exit Game Button
+        view.getMainMenu().getExitGame().addActionListener((ActionEvent e) -> {
             System.out.println("Exiting Game...");
             exitGame();
-        }
-        if (e.getSource() == view.getMainMenu().getOptions()) {
+        });
+
+        // ------------------ INSTRUCTIONS MENU ACTION LISTENER ------------------ \\
+        // Instructions Button
+        view.getMainMenu().getInstructions().addActionListener((ActionEvent e) -> {
+            displayInstructions();
+        });
+
+        // Back to Menu Button
+        view.getInstructions().getBackButton().addActionListener((ActionEvent e) -> {
+            System.out.println("Returning to Main Menu...");
+            returnToMainMenu();
+        });
+
+        // Left Button
+        view.getInstructions().getRightPageButton().addActionListener((ActionEvent e) -> {
+            for (int i = 1; i <= 3; i++) {
+                if (view.getInstructions().getPage() == 1) {
+                    view.getInstructions().getInstructionsbg().setIcon(new ImageIcon("mainmenuimages\\instructionspage2.png"));
+                    view.getInstructions().addPage();
+                    break;
+                }
+                if (view.getInstructions().getPage() == 2) {
+                    view.getInstructions().getInstructionsbg().setIcon(new ImageIcon("mainmenuimages\\instructionspage3.png"));
+                    view.getInstructions().addPage();
+                    break;
+                }
+            }
+        });
+
+        // Right Button
+        view.getInstructions().getLeftPageButton().addActionListener((ActionEvent e) -> {
+            for (int i = 0; i <= 3; i++) {
+                if (view.getInstructions().getPage() == 3) {
+                    view.getInstructions().getInstructionsbg().setIcon(new ImageIcon("mainmenuimages\\instructionspage2.png"));
+                    view.getInstructions().deductPage();
+                    break;
+                }
+                if (view.getInstructions().getPage() == 2) {
+                    view.getInstructions().getInstructionsbg().setIcon(new ImageIcon("mainmenuimages\\instructionspage1.png"));
+                    view.getInstructions().deductPage();
+                    break;
+                }
+            }
+        });
+
+        // -------------------- OPTIONS MENU ACTION LISTENER -------------------- \\
+        // Display Options Button
+        view.getMainMenu().getOptions().addActionListener((ActionEvent e) -> {
+            System.out.println("Displaying Options...");
             displayOptions();
             borderSelectedChipColour();
+        });
 
-        }
-
-        //INSTRUCTION MENU BUTTONS
-        if (e.getSource() == view.getInstructions().getBackButton()) {
+        // Options Back Button
+        view.getOptionsPanel().getBackButton().addActionListener((ActionEvent e) -> {
             System.out.println("Returning to Main Menu...");
+            tempColour[0] = chipColourP1;
+            tempColour[1] = chipColourP2;
             returnToMainMenu();
-        }
+        });
 
-        //OPTION MENU BUTTONS
-        if (e.getSource() == view.getOptionsPanel().getBackButton()) {
-            System.out.println("Returning to Main Menu...");
-            returnToMainMenu();
-        }
-
-        for (int i = 0; i < 6; i++) {
-            if (e.getSource() == view.getOptionsPanel().getP1ColourButtons()[i]) {
-                tempColour[0] = selectChipColorP1(e, i, model.getPlayer1());
-            }
-            if (e.getSource() == view.getOptionsPanel().getP2ColourButtons()[i]) {
-                tempColour[1] = selectChipColorP2(e, i, model.getPlayer2());
-            }
-
-        }
-
-        if (e.getSource() == view.getOptionsPanel().getSaveColoursButton()) {
+        // Options Save Colours Button
+        view.getOptionsPanel().getSaveColoursButton().addActionListener((ActionEvent e) -> {
             saveColor(tempColour, model.getPlayer1(), model.getPlayer2());
-            if (tempColour[0] != tempColour[1]) {
+            if (!tempColour[0].equals(tempColour[1])) {
                 returnToMainMenu();
             }
-        }
+        });
 
+        // Player 1 Colour Buttons
+        for (int i = 0; i < 6; i++) {
+            view.getOptionsPanel().getP1ColourButtons()[i].addActionListener((ActionEvent e) -> {
+                for (int i1 = 0; i1 < 6; i1++) {
+                    if (e.getSource() == view.getOptionsPanel().getP1ColourButtons()[i1]) {
+                        tempColour[0] = selectChipColor(e, i1, view.getOptionsPanel().getP1ColourButtons());
+                    }
+                }
+            });
+
+            // Player 2 Colour Buttons
+            view.getOptionsPanel().getP2ColourButtons()[i].addActionListener((ActionEvent e) -> {
+                for (int i1 = 0; i1 < 6; i1++) {
+                    if (e.getSource() == view.getOptionsPanel().getP2ColourButtons()[i1]) {
+                        tempColour[1] = selectChipColor(e, i1, view.getOptionsPanel().getP2ColourButtons());
+                    }
+                }
+            });
+        }
     }
 
     /**
      * Drops chip to View Grid; Changes the color of the background depending on
      * whose turn it is. Index of Button is chosen Column by user.
+     *
+     * @param e ActionEvent
+     * @param i index of JButton array
      */
     private void dropChiptoGrid(ActionEvent e, int i) {
         if (e.getSource() == view.getDropPanel().getDropButton()[i]) {
             if (model.getPlayer1().isPlayerTurn()) {
-                view.getBottomMenu().getPlayerTurn().setIcon(new ImageIcon("ingameimages\\player2turn.png"));
-                model.getGrid().addToGrid(i, 'x');
+                boolean columnFull = model.getGrid().addToGrid(i, 'x');
                 view.getGridPanel().updateGrid(model.getGrid(), model.getPlayer1().getPlayerChip().getChipColor(), 'x');
 
+                if (!columnFull) {
+                    switchPlayerTurn();
+                }
                 if (model.getGrid().checkConnectFour(i, 'x')) {
                     displayWinnerScreen("p1");
                 }
-
-                //SwitchPlayerTurn();
             } else if (model.getPlayer2().isPlayerTurn()) {
-                view.getBottomMenu().getPlayerTurn().setIcon(new ImageIcon("ingameimages\\player1turn.png"));
-                model.getGrid().addToGrid(i, 'o');
+                boolean columnFull = model.getGrid().addToGrid(i, 'o');
                 view.getGridPanel().updateGrid(model.getGrid(), model.getPlayer2().getPlayerChip().getChipColor(), 'o');
 
+                if (!columnFull) {
+                    switchPlayerTurn();
+                }
                 if (model.getGrid().checkConnectFour(i, 'o')) {
                     displayWinnerScreen("p2");
                 }
-
-                //SwitchPlayerTurn();
             }
-            switchPlayerTurn();
             if (model.getGrid().gridFull()) {
                 displayDrawScreen();
             }
-
         }
     }
 
-    public Color selectChipColorP1(ActionEvent e, int i, Player p) {
-        OptionsPanel op = view.getOptionsPanel();
+    /**
+     * Changes the colour of the borders on the JButtons when first opening the
+     * options menu. Sets the current chip colours to have a black border.
+     */
+    private void borderSelectedChipColour() {
+        for (int i = 0; i < 6; i++) {
+            view.getOptionsPanel().getP1ColourButtons()[i].setBorder(new LineBorder(Color.GRAY, 1));
+            view.getOptionsPanel().getP2ColourButtons()[i].setBorder(new LineBorder(Color.GRAY, 1));
 
-        if (e.getSource() == view.getOptionsPanel().getP1ColourButtons()[i]) {
-            for (int j = 0; j < 6; j++) {
-                op.getP1ColourButtons()[j].setBorder(new LineBorder(Color.GRAY, 1));
+            if (chipColourP1.equals(view.getOptionsPanel().getP1ColourButtons()[i].getBackground())) {
+                view.getOptionsPanel().getP1ColourButtons()[i].setBorder(new LineBorder(Color.BLACK, 3));
             }
-            op.getP1ColourButtons()[i].setBorder(new LineBorder(Color.BLACK, 3));
+            if (chipColourP2.equals(view.getOptionsPanel().getP2ColourButtons()[i].getBackground())) {
+                view.getOptionsPanel().getP2ColourButtons()[i].setBorder(new LineBorder(Color.BLACK, 3));
+            }
         }
-        return op.getP1ColourButtons()[i].getBackground();
     }
 
-    public Color selectChipColorP2(ActionEvent e, int i, Player p) {
-        OptionsPanel op = view.getOptionsPanel();
+    /**
+     * Changes the border colour of the currently selected colour option
+     * (JButton) to be black. After setting the border to gray on all JButtons.
+     * This makes it so as you click the different colour options, you can see
+     * which colour is currently selected.
+     *
+     * @param e ActionEvent
+     * @param i index of the JButton array
+     * @param ba JButton array which changes are being made on.
+     * @return
+     */
+    private Color selectChipColor(ActionEvent e, int i, JButton[] ba) {
         for (int j = 0; j < 6; j++) {
-            op.getP2ColourButtons()[j].setBorder(new LineBorder(Color.GRAY, 1));
+            ba[j].setBorder(new LineBorder(Color.GRAY, 1));
         }
-        if (e.getSource() == view.getOptionsPanel().getP2ColourButtons()[i]) {
-            op.getP2ColourButtons()[i].setBorder(new LineBorder(Color.BLACK, 3));
+        if (e.getSource() == ba[i]) {
+            ba[i].setBorder(new LineBorder(Color.BLACK, 3));
         }
-        return op.getP2ColourButtons()[i].getBackground();
+        return ba[i].getBackground();
     }
 
-    public void saveColor(Color[] c, Player p1, Player p2) {
-        if (c[0] == c[1]) {
+    /**
+     * Saves the colour choice of the players from the options menu into the
+     * database. Also sets the current player chips colours to be the selected
+     * colour. If the 2 selected colours are the same, returns a popup with an
+     * error.
+     *
+     * @param c the temporary colour array that stores the selected colour
+     * @param p1 Player1 object
+     * @param p2 Player2 object
+     */
+    private void saveColor(Color[] c, Player p1, Player p2) {
+        if (c[0].equals(c[1])) {
+            UIManager UI = new UIManager();
+            UI.put("OptionPane.background", new Color(40, 40, 40));
+            UI.put("Panel.background", new Color(40, 40, 40));
+            UI.put("OptionPane.messageForeground", Color.LIGHT_GRAY);
             JOptionPane.showMessageDialog(null,
                     "Chips can't be the same colour",
-                    "Chips same colour",
+                    "Save Failed!",
                     JOptionPane.WARNING_MESSAGE);
         } else {
             chipColourP1 = c[0];
@@ -224,45 +281,14 @@ public class ConnectFourController implements ActionListener {
             p1.getPlayerChip().setChipColor(chipColourP1);
             p2.getPlayerChip().setChipColor(chipColourP2);
 
-            db.insertSavedColours(p1.getPlayerChip().getChipColor().hashCode(), p2.getPlayerChip().getChipColor().hashCode());
-
-//            int test = p1.getPlayerChip().getChipColor().hashCode();
-//            int test2 = p2.getPlayerChip().getChipColor().getRGB();
-//            System.out.println(test);
-//            System.out.println(test2);
-//            p1.getPlayerChip().setChipColor(new Color(test));
+            db.insertSavedColours(chipColourP1.hashCode(), chipColourP2.hashCode());
         }
-    }
-
-    public void borderSelectedChipColour() {
-
-        Color currentChipColor1 = chipColourP1;
-        Color currentChipColor2 = chipColourP2;
-
-        for (int i = 0; i < 6; i++) {
-
-            view.getOptionsPanel().getP1ColourButtons()[i].setBorder(new LineBorder(Color.GRAY, 1));
-            view.getOptionsPanel().getP2ColourButtons()[i].setBorder(new LineBorder(Color.GRAY, 1));
-
-            if (currentChipColor1.equals(view.getOptionsPanel().getP1ColourButtons()[i].getBackground())) {
-                view.getOptionsPanel().getP1ColourButtons()[i].setBorder(new LineBorder(Color.BLACK, 3));
-            }
-            if (currentChipColor2.equals(view.getOptionsPanel().getP2ColourButtons()[i].getBackground())) {
-                view.getOptionsPanel().getP2ColourButtons()[i].setBorder(new LineBorder(Color.BLACK, 3));
-            }
-        }
-    }
-
-    //TODO: LOAD FROM DB 
-    public Color[] loadColours() {
-        Color[] c = {Color.RED, Color.YELLOW};
-        return c;
     }
 
     /**
      * Clears the Grid and Resets the Game.
      */
-    public void resetGame() {
+    private void resetGame() {
         model.getGrid().fillGrid();
         view.getGridPanel().resetGrid();
         view.add(view.getGridPanel());
@@ -275,7 +301,6 @@ public class ConnectFourController implements ActionListener {
         view.getBottomMenu().getPlayerTurn().setIcon(new ImageIcon("ingameimages\\player1turn.png"));
         model.getPlayer1().getPlayerChip().setChipColor(chipColourP1);
         model.getPlayer2().getPlayerChip().setChipColor(chipColourP2);
-
     }
 
     /**
@@ -290,19 +315,14 @@ public class ConnectFourController implements ActionListener {
         view.remove(view.getGameWinner());
     }
 
-    public void saveGame() {
-
-        String[] txtFiles = {"player1Object.txt", "player2Object.txt", "gridObject.txt"};
+    /**
+     * Saves the current game to the database.
+     */
+    private void saveGame() {
         Object[] obj = {model.getPlayer1(), model.getPlayer2(), model.getGrid()};
         try {
-            for (int i = 0; i < txtFiles.length; i++) {
-                ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(txtFiles[i]));
-                oos.writeObject(obj[i]);
-                oos.flush();
-                oos.close();
-            }
-            System.out.println("Saved successfully...");
-        } catch (IOException e) {
+            db.insertSavedGameData(obj);
+        } catch (Exception e) {
             System.out.println("Save failed...");
             e.printStackTrace();
             exitToMenu();
@@ -310,58 +330,42 @@ public class ConnectFourController implements ActionListener {
         exitToMenu();
     }
 
-    public void loadGameData() {
-        String[] txtFiles = {"player1Object.txt", "player2Object.txt", "gridObject.txt"};
-        ArrayList<Object> objArray = new ArrayList<>();
+    /**
+     * Loads the game from the database and sets the returned object array to
+     * the player and grid objects. Starts a new game, and updates the grid with
+     * the loaded changes. ArrayList<Object> gives unchecked error, and is
+     * suppressed.
+     */
+    @SuppressWarnings("unchecked")
+    private void continueGame() {
         try {
-            for (String txtFile : txtFiles) {
-                FileInputStream fis = new FileInputStream(txtFile);
-                ObjectInputStream ois = new ObjectInputStream(fis);
+            startNewGame();
+            ArrayList<Object> obj = db.loadSavedGameData();
 
-                System.out.println("Loading " + txtFile);
+            model.setPlayer1((Player) obj.get(0));
+            model.setPlayer2((Player) obj.get(1));
+            model.setGrid((Grid) obj.get(2));
 
-                objArray.add(ois.readObject());
-
-                System.out.println("Load successful...\n");
-                ois.close();
-                fis.close();
+            if (model.getPlayer2().isPlayerTurn()) {
+                view.getBottomMenu().getPlayerTurn().setIcon(new ImageIcon("ingameimages\\player2turn.png"));
             }
-            continueGame(objArray);
 
-        } catch (ClassNotFoundException e) {
-            System.out.println("Class not found\n");
-            e.printStackTrace();
-        } catch (IOException e) {
-            System.out.println("Loading txtFiles failed...");
-            e.printStackTrace();
+            view.getGridPanel().updateGrid(model.getGrid(), model.getPlayer1().getPlayerChip().getChipColor(), 'x');
+            view.getGridPanel().updateGrid(model.getGrid(), model.getPlayer2().getPlayerChip().getChipColor(), 'o');
+        } catch (NullPointerException ex) {
+            System.out.println("No game saved! ");
+            exitToMenu();
+        } catch (Exception ex) {
+            System.out.println("Load Failed! ");
+            ex.printStackTrace();
             exitToMenu();
         }
     }
 
     /**
-     * Starts Game from Main Menu
-     *
-     * @param obj
-     */
-    private void continueGame(ArrayList obj) {
-        startNewGame();
-
-        model.setPlayer1((Player) obj.get(0));
-        model.setPlayer2((Player) obj.get(1));
-        model.setGrid((Grid) obj.get(2));
-
-        if (model.getPlayer2().isPlayerTurn()) {
-            view.getBottomMenu().getPlayerTurn().setIcon(new ImageIcon("ingameimages\\player2turn.png"));
-        }
-
-        view.getGridPanel().updateGrid(model.getGrid(), model.getPlayer1().getPlayerChip().getChipColor(), 'x');
-        view.getGridPanel().updateGrid(model.getGrid(), model.getPlayer2().getPlayerChip().getChipColor(), 'o');
-    }
-
-    /**
      * Displays the Instructions Panel
      */
-    public void displayInstructions() {
+    private void displayInstructions() {
         System.out.println("Displaying Instructions");
         view.getMainMenu().setVisible(false);
         view.add(view.getInstructions());
@@ -370,8 +374,7 @@ public class ConnectFourController implements ActionListener {
     /**
      * Displays the Options Panel
      */
-    public void displayOptions() {
-        System.out.println("Displaying Options");
+    private void displayOptions() {
         view.getMainMenu().setVisible(false);
         view.add(view.getOptionsPanel());
     }
@@ -387,6 +390,9 @@ public class ConnectFourController implements ActionListener {
         view.remove(view.getGameWinner());
     }
 
+    /**
+     * Exits from the options or instructions page back to the main menu"
+     */
     private void returnToMainMenu() {
         view.remove(view.getInstructions());
         view.remove(view.getOptionsPanel());
@@ -396,7 +402,7 @@ public class ConnectFourController implements ActionListener {
     /**
      * Replaces Drop buttons with "Player x Has Won"
      */
-    public void displayWinnerScreen(String player) {
+    private void displayWinnerScreen(String player) {
         System.out.println("Game Over");
         view.getDropPanel().setVisible(false);
         view.getBottomMenu().getSaveButton().setVisible(false);
@@ -409,32 +415,41 @@ public class ConnectFourController implements ActionListener {
         }
     }
 
-    public void displayDrawScreen() {
+    /**
+     * Replaces Drop buttons with "Draw"
+     */
+    private void displayDrawScreen() {
         System.out.println("Game Over");
         view.getDropPanel().setVisible(false);
         view.getBottomMenu().getSaveButton().setVisible(false);
         view.getBottomMenu().getPlayerTurn().setVisible(false);
         view.add(view.getGameWinner());
-        view.getGameWinner().getWinner().setIcon(new ImageIcon("ingameimages\\player1winner.png"));
+        view.getGameWinner().getWinner().setIcon(new ImageIcon("ingameimages\\gamedraw.png"));
 
     }
 
     /**
      * Changes the color turn state for each player.
      */
-    public void switchPlayerTurn() {
+    private void switchPlayerTurn() {
         model.getPlayer1().setIsPlayerTurn(!model.getPlayer1().isPlayerTurn());
         model.getPlayer2().setIsPlayerTurn(!model.getPlayer2().isPlayerTurn());
+        if (model.getPlayer1().isPlayerTurn()) {
+            view.getBottomMenu().getPlayerTurn().setIcon(new ImageIcon("ingameimages\\player1turn.png"));
+        } else if (model.getPlayer2().isPlayerTurn()) {
+            view.getBottomMenu().getPlayerTurn().setIcon(new ImageIcon("ingameimages\\player2turn.png"));
+        }
     }
 
     /**
-     * *
+     *
      * Exits the Game
      */
     public void exitGame() {
         System.exit(0);
     }
 
+    //------------------ GETTERS AND SETTERS ------------------\\
     public ConnectFourModel getModel() {
         return model;
     }

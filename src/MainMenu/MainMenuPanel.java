@@ -1,31 +1,30 @@
 package MainMenu;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Point;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 /**
+ * Contains components for the Main menu panel that allow the users to choose
+ * their desired option (New game, continue, instructions, options, exit).
  *
- * @author Jairus
+ * @author Jairus M. & Andrew B.
  */
-public class MainMenuPanel extends JPanel{
+public class MainMenuPanel extends JPanel {
+
     private JLabel mainmenubg;
     private JButton newGame;
     private JButton continueGame;
     private JButton instructions;
     private JButton options;
     private JButton exitGame;
-    
-    public MainMenuPanel(){
+
+    public MainMenuPanel() {
         this.setPreferredSize(new Dimension(600, 660));
         this.setLayout(null);
-        
+
         // New Game Button
         this.newGame = new JButton();
         this.newGame.setOpaque(false);
@@ -36,8 +35,8 @@ public class MainMenuPanel extends JPanel{
         this.newGame.setBounds(200, 260, 200, 30);
         this.add(newGame);
         // ---------------------------------------\\
-        
-       // Continue Button
+
+        // Continue Button
         this.continueGame = new JButton();
         this.continueGame.setOpaque(false);
         this.continueGame.setContentAreaFilled(false);
@@ -47,7 +46,7 @@ public class MainMenuPanel extends JPanel{
         this.continueGame.setBounds(200, 315, 200, 30);
         this.add(continueGame);
         // ---------------------------------------\\
-        
+
         // Instructions Button
         this.instructions = new JButton();
         this.instructions.setOpaque(false);
@@ -58,7 +57,7 @@ public class MainMenuPanel extends JPanel{
         this.instructions.setBounds(200, 370, 200, 30);
         this.add(instructions);
         // ---------------------------------------\\
-        
+
         // Options Button
         this.options = new JButton();
         this.options.setOpaque(false);
@@ -69,7 +68,7 @@ public class MainMenuPanel extends JPanel{
         this.options.setBounds(200, 425, 200, 30);
         this.add(options);
         //-----------------------------------------\\
-        
+
         // Exit Button
         this.exitGame = new JButton();
         this.exitGame.setOpaque(false);
@@ -80,14 +79,15 @@ public class MainMenuPanel extends JPanel{
         this.exitGame.setBounds(200, 480, 200, 30);
         this.add(exitGame);
         //-----------------------------------------\\
-        
+
         this.mainmenubg = new JLabel();
-        this.mainmenubg.setPreferredSize(new Dimension(600,660));
+        this.mainmenubg.setPreferredSize(new Dimension(600, 660));
         this.mainmenubg.setBounds(0, 0, 600, 660);
         this.mainmenubg.setIcon(new ImageIcon("mainmenuimages\\mainmenubg.png"));
         this.add(mainmenubg);
     }
 
+    //------------------ GETTERS AND SETTERS ------------------\\
     public JButton getNewGame() {
         return newGame;
     }
@@ -127,6 +127,5 @@ public class MainMenuPanel extends JPanel{
     public void setExitGame(JButton exitGame) {
         this.exitGame = exitGame;
     }
-    
-    
+
 }

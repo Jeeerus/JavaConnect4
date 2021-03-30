@@ -1,21 +1,22 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Model;
 
-import java.awt.Color;
+/**
+ * The Player class creates a new Player containing all the player information
+ * to be included in the game
+ *
+ * @author Jairus M. & Andrew B.
+ */
+public class Player implements java.io.Serializable {
 
-public class Player implements java.io.Serializable{
     private Chip playerChip;
     private boolean isPlayerTurn;
-    
-    public Player(Chip c, boolean isPlayerTurn){
+
+    public Player(Chip c, boolean isPlayerTurn) {
         this.playerChip = c;
         this.isPlayerTurn = isPlayerTurn;
     }
 
+    //------------------ GETTERS AND SETTERS ------------------\\
     public Chip getPlayerChip() {
         return playerChip;
     }
@@ -30,5 +31,5 @@ public class Player implements java.io.Serializable{
 
     public void setIsPlayerTurn(boolean isPlayerTurn) {
         this.isPlayerTurn = isPlayerTurn;
-    }   
+    }
 }

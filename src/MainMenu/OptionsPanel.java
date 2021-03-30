@@ -1,78 +1,78 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package MainMenu;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 /**
+ * Contains components for the Options panel that allow the users to choose
+ * their own colours for their chip.
  *
- * @author Jairus
+ * @author Jairus M. & Andrew B.
  */
-public class OptionsPanel extends JPanel{
-    private JLabel player1Label;
-    private JLabel player2Label;
+public final class OptionsPanel extends JPanel {
+
     private JButton[] p1ColourButtons = new JButton[6];
     private JButton[] p2ColourButtons = new JButton[6];
     private JButton saveColoursButton;
     private JButton backButton;
-    
-    public OptionsPanel(){
+    private JLabel optionsBackGround;
+
+    public OptionsPanel() {
         this.setPreferredSize(new Dimension(600, 600));
         this.setLayout(null);
-        
-        this.player1Label = new JLabel("Player 1");
-        this.player2Label = new JLabel("Player 2");
-        this.player1Label.setBounds(10, 100, 100, 100);
-        this.player2Label.setBounds(10, 200, 100, 100);
-        
+
         this.saveColoursButton = new JButton("Save and Exit");
-        this.saveColoursButton.setBounds(10, 300, 150, 50);
+        this.saveColoursButton.setBounds(150, 500, 130, 40);
+        this.saveColoursButton.setIcon(new ImageIcon("mainmenuimages\\optionssavebutton.png"));
+        this.saveColoursButton.setRolloverIcon(new ImageIcon("mainmenuimages\\optionssavebuttonhover.png"));
+        this.saveColoursButton.setContentAreaFilled(false);
+        this.saveColoursButton.setBorderPainted(false);
+        this.saveColoursButton.setOpaque(false);
         this.add(saveColoursButton);
-        
+
         this.backButton = new JButton("Exit without saving");
-        //this.backButton.setIcon(new ImageIcon("mainmenuimages\\backbutton.png"));
-        //this.backButton.setRolloverIcon(new ImageIcon("mainmenuimages\\backbuttonhover.png"));
-        this.backButton.setSize(new Dimension(160,40));
-        this.backButton.setBounds(400, 570, 160, 40);
-        //this.backButton.setContentAreaFilled(false);
-        //this.backButton.setBorderPainted(false);
-        //this.backButton.setOpaque(false);
+        this.backButton.setIcon(new ImageIcon("mainmenuimages\\optionsback.png"));
+        this.backButton.setRolloverIcon(new ImageIcon("mainmenuimages\\optionsbackhover.png"));
+        this.backButton.setSize(new Dimension(130, 40));
+        this.backButton.setBounds(345, 500, 130, 40);
+        this.backButton.setContentAreaFilled(false);
+        this.backButton.setBorderPainted(false);
+        this.backButton.setOpaque(false);
         this.add(backButton);
-        
-        this.add(player1Label);
-        this.add(player2Label);
-        
-        for(int i = 0; i < 6; i++){
+
+        for (int i = 0; i < 6; i++) {
             this.p1ColourButtons[i] = new JButton();
             this.p2ColourButtons[i] = new JButton();
-            this.add(p1ColourButtons[i]);
-            this.add(p2ColourButtons[i]);
         }
-        
+
         setButtonBounds();
         setColoursP2();
         setColoursP1();
+
+        this.optionsBackGround = new JLabel();
+        this.optionsBackGround.setIcon(new ImageIcon("mainmenuimages\\optionsPanel.png"));
+        this.optionsBackGround.setBounds(0, 0, 600, 660);
+        this.add(optionsBackGround);
     }
-    
-    public void setButtonBounds(){
-        int y = 100;
-        for(int i = 0; i < 6; i++){
-            this.p1ColourButtons[i].setBounds(y, 130, 50, 50);
-            this.p2ColourButtons[i].setBounds(y, 230, 50, 50);
-            y += 75;
+
+    // Sets Location and Size of the Buttons
+    public void setButtonBounds() {
+        int y = 210;
+        for (int i = 0; i < 6; i++) {
+            this.p1ColourButtons[i].setBounds(y, 315, 30, 30);
+            this.p2ColourButtons[i].setBounds(y, 420, 30, 30);
+            this.add(p1ColourButtons[i]);
+            this.add(p2ColourButtons[i]);
+            y += 50;
         }
     }
-    
-    public void setColoursP2(){
+
+    // Sets Colours for Player 2 Buttons
+    public void setColoursP2() {
         this.p1ColourButtons[0].setBackground(Color.red);
         this.p1ColourButtons[1].setBackground(Color.yellow);
         this.p1ColourButtons[2].setBackground(Color.blue);
@@ -80,8 +80,9 @@ public class OptionsPanel extends JPanel{
         this.p1ColourButtons[4].setBackground(Color.magenta);
         this.p1ColourButtons[5].setBackground(Color.cyan);
     }
-    
-    public void setColoursP1(){
+
+    // Sets Colours for Player 1 Buttons
+    public void setColoursP1() {
         this.p2ColourButtons[0].setBackground(Color.red);
         this.p2ColourButtons[1].setBackground(Color.yellow);
         this.p2ColourButtons[2].setBackground(Color.blue);
@@ -90,22 +91,7 @@ public class OptionsPanel extends JPanel{
         this.p2ColourButtons[5].setBackground(Color.cyan);
     }
 
-    public JLabel getPlayer1Label() {
-        return player1Label;
-    }
-
-    public void setPlayer1Label(JLabel player1Label) {
-        this.player1Label = player1Label;
-    }
-
-    public JLabel getPlayer2Label() {
-        return player2Label;
-    }
-
-    public void setPlayer2Label(JLabel player2Label) {
-        this.player2Label = player2Label;
-    }
-
+    //------------------ GETTERS AND SETTERS ------------------\\
     public JButton[] getP1ColourButtons() {
         return p1ColourButtons;
     }
@@ -137,8 +123,4 @@ public class OptionsPanel extends JPanel{
     public void setBackButton(JButton backButton) {
         this.backButton = backButton;
     }
-    
-    
-    
-    
 }

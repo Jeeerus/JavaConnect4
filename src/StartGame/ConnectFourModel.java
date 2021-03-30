@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package StartGame;
 
 import Model.Chip;
@@ -11,30 +6,41 @@ import Model.Player;
 import java.awt.Color;
 
 /**
+ * Contains the Model for the Game. The view will be based on the contents of
+ * this class.
  *
- * @author Jairus
+ * @author Jairus M. & Andrew B.
  */
 public class ConnectFourModel {
+
     private Player player1;
     private Player player2;
     private Grid grid;
-    
+
     /**
-     * Player 1 Default Yellow and Start.
-     * Player 2 Default Red
+     * Player 1 Default Color Yellow and has first turn. Player 2 Default Red
      */
-    public ConnectFourModel(){
-        player1 =  new Player(new Chip(Color.RED), true);
-        player2 = new Player(new Chip(Color.YELLOW), false);
-        grid = new Grid();
-    }
-    
-    public ConnectFourModel(Chip p1, Chip p2){
-        player1 = new Player(p1, true);
-        player2 = new Player(p2, false);
-        grid = new Grid();
+    public ConnectFourModel() {
+        this.player1 = new Player(new Chip(Color.RED), true);
+        this.player2 = new Player(new Chip(Color.YELLOW), false);
+        this.grid = new Grid();
     }
 
+    /**
+     * Creates the model to be used by the controller
+     *
+     * @param p1 the colour of the chip loaded from the database where the
+     * playerID = 1
+     * @param p2 the colour of the chip loaded from the database where the
+     * playerID = 2
+     */
+    public ConnectFourModel(Chip p1, Chip p2) {
+        this.player1 = new Player(p1, true);
+        this.player2 = new Player(p2, false);
+        this.grid = new Grid();
+    }
+
+    //------------------ GETTERS AND SETTERS ------------------\\
     public Player getPlayer1() {
         return player1;
     }
@@ -58,6 +64,5 @@ public class ConnectFourModel {
     public void setGrid(Grid grid) {
         this.grid = grid;
     }
-    
-    
+
 }

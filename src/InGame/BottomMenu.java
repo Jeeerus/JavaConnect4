@@ -1,11 +1,5 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package InGame;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import javax.swing.ImageIcon;
@@ -14,24 +8,27 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 /**
+ * BottomMenu contains buttons that allow the user to Save, Start a new game or
+ * Exit to the main menu, from the game.
  *
- * @author Jairus
+ * @author Jairus M. & Andrew B.
  */
-public class BottomMenu extends JPanel{
+public class BottomMenu extends JPanel {
+
     private JButton saveButton;
     private JButton newGameButton;
     private JButton exitButton;
     private JLabel playerTurn;
-    
-    public BottomMenu(){
-        this.setPreferredSize(new Dimension(600,50));
+
+    public BottomMenu() {
+        this.setPreferredSize(new Dimension(600, 50));
         this.setBackground(Color.DARK_GRAY);
-        
+
         this.playerTurn = new JLabel();
         this.playerTurn.setPreferredSize(new Dimension(250, 40));
         this.playerTurn.setIcon(new ImageIcon("ingameimages\\player1turn.png"));
         this.add(playerTurn);
-        
+
         this.newGameButton = new JButton();
         this.newGameButton.setPreferredSize(new Dimension(100, 30));
         this.newGameButton.setOpaque(false);
@@ -40,7 +37,7 @@ public class BottomMenu extends JPanel{
         this.newGameButton.setIcon(new ImageIcon("ingameimages\\newgame.png"));
         this.newGameButton.setRolloverIcon(new ImageIcon("ingameimages\\newgamehover.png"));
         this.add(newGameButton);
-        
+
         this.saveButton = new JButton();
         this.saveButton.setPreferredSize(new Dimension(100, 30));
         this.saveButton.setOpaque(false);
@@ -49,7 +46,7 @@ public class BottomMenu extends JPanel{
         this.saveButton.setIcon(new ImageIcon("ingameimages\\save.png"));
         this.saveButton.setRolloverIcon(new ImageIcon("ingameimages\\savehover.png"));
         this.add(saveButton);
-        
+
         this.exitButton = new JButton();
         this.exitButton.setPreferredSize(new Dimension(90, 30));
         this.exitButton.setOpaque(false);
@@ -60,6 +57,7 @@ public class BottomMenu extends JPanel{
         this.add(exitButton);
     }
 
+    //------------------ GETTERS AND SETTERS ------------------\\
     public JButton getSaveButton() {
         return saveButton;
     }
@@ -91,6 +89,5 @@ public class BottomMenu extends JPanel{
     public void setPlayerTurn(JLabel playerTurn) {
         this.playerTurn = playerTurn;
     }
-    
-    
+
 }
